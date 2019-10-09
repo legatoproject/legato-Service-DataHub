@@ -373,12 +373,6 @@ static void ConnectToDataHub
     {
         HandleConnectionError("Data Hub Query", result);
     }
-
-    result = io_TryConnectService();
-    if (result != LE_OK)
-    {
-        HandleConnectionError("Data Hub I/O", result);
-    }
 }
 
 

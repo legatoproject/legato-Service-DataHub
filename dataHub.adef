@@ -46,6 +46,12 @@ extern:
     hubd.dataHub.io
     hubd.dataHub.query
     hubd.dataHub.config
+
+#if ${DHUB_DISABLE_TOOLS} = 1
+#else
+    dhubToolAdmin   = dhub.adminTool.admin
+    dhubToolQuery   = dhub.adminTool.query
+#endif /* end !DHUB_DISABLE_TOOLS */
 }
 
 #if ${LE_CONFIG_LINUX} = y
@@ -54,7 +60,6 @@ bindings:
 #if ${DHUB_DISABLE_TOOLS} = 1
 #else
     dhub.adminTool.admin    -> hubd.dataHub.admin
-    dhub.adminTool.io       -> hubd.dataHub.io
     dhub.adminTool.query    -> hubd.dataHub.query
 #endif /* end !DHUB_DISABLE_TOOLS */
 
