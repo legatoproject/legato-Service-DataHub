@@ -364,11 +364,21 @@ static hub_HandlerRef_t AddPushHandler
     }
 
     hub_HandlerRef_t handlerRef = resTree_AddPushHandler(resRef, dataType, callbackPtr, contextPtr);
-    if (handlerRef)
+    if (handlerRef == NULL)
     {
-        PushHandlerCount++;
-        LE_DEBUG("Added Handler %p, current handler count: %d", handlerRef, PushHandlerCount);
+        return NULL;
     }
+
+    PushHandlerCount++;
+    LE_DEBUG("Added Handler %p, current handler count: %d", handlerRef, PushHandlerCount);
+
+    // If the resource has a current value call the push handler now (if it's a data type match).
+    dataSample_Ref_t sampleRef = resTree_GetCurrentValue(resRef);
+    if (sampleRef != NULL)
+    {
+        handler_Call(handlerRef, resTree_GetDataType(resRef), sampleRef);
+    }
+
     return handlerRef;
 }
 
