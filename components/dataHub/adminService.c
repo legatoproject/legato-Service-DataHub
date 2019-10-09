@@ -898,7 +898,7 @@ void admin_DeleteObs
     {
         resTree_EntryRef_t entry = resTree_FindEntry(obsNamespace, path);
 
-        if (entry != NULL)
+        if ((entry != NULL) && (resTree_GetEntryType(entry) == ADMIN_ENTRY_TYPE_OBSERVATION))
         {
             resTree_DeleteObservation(entry);
         }

@@ -146,31 +146,30 @@ static void DeleteHandler
 /**
  * Remove a Handler from a given list.
  *
- * @return
- *      - LE_OK If handler was valid and it was removed successfully.
- *      - LE_FAULT otherwise.
+ * @return A pointer to the list that the handler was removed from, or NULL if not found.
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t handler_Remove
+le_dls_List_t* handler_Remove
 (
     hub_HandlerRef_t handlerRef
 )
 //--------------------------------------------------------------------------------------------------
 {
+    le_dls_List_t* listPtr = NULL;
     Handler_t* handlerPtr = le_ref_Lookup(HandlerRefMap, handlerRef);
-    le_result_t ret = LE_OK;
     if (handlerPtr != NULL)
     {
-        le_dls_Remove(handlerPtr->listPtr, &handlerPtr->link);
+        listPtr = handlerPtr->listPtr;
+        le_dls_Remove(listPtr, &handlerPtr->link);
 
         DeleteHandler(handlerPtr);
     }
     else
     {
         LE_ERROR("Invalid handler reference %p. Cannot remove", handlerRef);
-        ret = LE_FAULT;
     }
-    return ret;
+
+    return listPtr;
 }
 
 

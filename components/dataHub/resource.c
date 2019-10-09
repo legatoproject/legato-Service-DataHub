@@ -373,7 +373,6 @@ void res_Destruct
 
     if (resPtr->pushedValue != NULL)
     {
-        LE_WARN("Resource had a pushed value.");
         le_mem_Release(resPtr->pushedValue);
         resPtr->pushedValue = NULL;
     }
@@ -383,23 +382,26 @@ void res_Destruct
 
     if (resPtr->overrideValue != NULL)
     {
-        LE_WARN("Resource had an override value.");
+        LE_CRIT("Resource had an override value that has been lost.");
         le_mem_Release(resPtr->overrideValue);
         resPtr->overrideValue = NULL;
     }
 
     if (resPtr->defaultValue != NULL)
     {
-        LE_WARN("Resource had a default value.");
+        LE_CRIT("Resource had a default value that has been lost.");
         le_mem_Release(resPtr->defaultValue);
         resPtr->defaultValue = NULL;
     }
 
-    handler_RemoveAll(&resPtr->pushHandlerList);
+    if (!le_dls_IsEmpty(&resPtr->pushHandlerList))
+    {
+        LE_CRIT("Resource had one or more push handlers that have been lost.");
+        handler_RemoveAll(&resPtr->pushHandlerList);
+    }
 
     if (resPtr->jsonExample != NULL)
     {
-        LE_WARN("Resource had a JSON example value.");
         le_mem_Release(resPtr->jsonExample);
         resPtr->jsonExample = NULL;
     }
@@ -807,11 +809,11 @@ le_result_t res_Push
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Add a Push Handler to an Output resource.
+ * Add a Push Handler to a resource.
  *
  * @return Reference to the handler added. NULL if failed to add handler.
  *
- * @note Can be removed by calling handler_Remove().
+ * @note Can be removed by calling res_RemovePushHandler().
  */
 //--------------------------------------------------------------------------------------------------
 hub_HandlerRef_t res_AddPushHandler
@@ -826,6 +828,32 @@ hub_HandlerRef_t res_AddPushHandler
     LE_ASSERT(resTree_IsResource(resPtr->entryRef));
 
     return handler_Add(&resPtr->pushHandlerList, dataType, callbackPtr, contextPtr);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Remove a Push Handler from a resource.
+ *
+ * @return A reference to the resource from which the handler was removed, or NULL if not found.
+ */
+//--------------------------------------------------------------------------------------------------
+res_Resource_t* res_RemovePushHandler
+(
+    hub_HandlerRef_t handlerRef
+)
+//--------------------------------------------------------------------------------------------------
+{
+    le_dls_List_t* handlerListPtr = handler_Remove(handlerRef);
+
+    if (handlerListPtr != NULL)
+    {
+        return CONTAINER_OF(handlerListPtr, res_Resource_t, pushHandlerList);
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 
@@ -919,16 +947,23 @@ static void DropSettings
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Delete an Observation.
+ * Delete a resource.
  */
 //--------------------------------------------------------------------------------------------------
-void res_DeleteObservation
+void res_Delete
 (
-    res_Resource_t* resPtr
+    res_Resource_t* resPtr,
+    admin_EntryType_t resourceType
 )
 //--------------------------------------------------------------------------------------------------
 {
-    DropSettings(resPtr);
+    // If this is an Observation, then drop any administrative settings that remain on the
+    // resource.  All other types of resources should never have administrative settings
+    // on them when they are deleted.  The destructor will log errors if they do.
+    if (resourceType == ADMIN_ENTRY_TYPE_OBSERVATION)
+    {
+        DropSettings(resPtr);
+    }
 
     le_mem_Release(resPtr);
 }

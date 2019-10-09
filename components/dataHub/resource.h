@@ -349,7 +349,7 @@ le_result_t res_Push
  *
  * @return Reference to the handler added. NULL if failed to add handler.
  *
- * @note Can be removed by calling handler_Remove().
+ * @note Can be removed by calling res_RemovePushHandler().
  */
 //--------------------------------------------------------------------------------------------------
 hub_HandlerRef_t res_AddPushHandler
@@ -358,6 +358,19 @@ hub_HandlerRef_t res_AddPushHandler
     io_DataType_t dataType,
     void* callbackPtr,
     void* contextPtr
+);
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Remove a Push Handler from a resource.
+ *
+ * @return A reference to the resource from which the handler was removed, or NULL if not found.
+ */
+//--------------------------------------------------------------------------------------------------
+res_Resource_t* res_RemovePushHandler
+(
+    hub_HandlerRef_t handlerRef
 );
 
 
@@ -379,12 +392,13 @@ bool res_HasAdminSettings
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Delete an Observation.
+ * Delete a resource.
  */
 //--------------------------------------------------------------------------------------------------
-void res_DeleteObservation
+void res_Delete
 (
-    res_Resource_t* obsPtr
+    res_Resource_t* resPtr,
+    admin_EntryType_t resourceType
 );
 
 

@@ -431,6 +431,30 @@ static const char* GetEntryTypeName
 
 //--------------------------------------------------------------------------------------------------
 /**
+ * Delete a Placeholder resource.
+ *
+ * @note This should only be done if there are no administrative settings left on the placeholder.
+ */
+//--------------------------------------------------------------------------------------------------
+static void DeletePlaceholder
+(
+    Entry_t* entryPtr
+)
+//--------------------------------------------------------------------------------------------------
+{
+    // Delete the Placeholder resource object.
+    res_Delete(entryPtr->u.resourcePtr, ADMIN_ENTRY_TYPE_PLACEHOLDER);
+
+    // Convert the resource tree entry into a namespace, detaching the Placeholder resource from it.
+    entryPtr->u.resourcePtr = NULL;
+    entryPtr->type = ADMIN_ENTRY_TYPE_NAMESPACE;
+
+    resTree_DeleteNamespace(entryPtr);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
  * Creates a placeholder resource and attaches it to a namespace entry.
  *
  * entryRef must be a namespace entry. The placeholder will either be an IoResource placeholder or
@@ -1175,7 +1199,7 @@ le_result_t resTree_Push
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Add a Push Handler to an Output resource.
+ * Add a Push Handler to a resource.
  *
  * @return Reference to the handler added. NULL if failed to add handler.
  *
@@ -1200,6 +1224,40 @@ hub_HandlerRef_t resTree_AddPushHandler
         LE_CRIT("Adding handler failed!");
     }
     return h;
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Remove a Push Handler from a resource.
+ *
+ * @return true if the push handler was associated with a resource before being removed or false
+ *         otherwise.
+ */
+//--------------------------------------------------------------------------------------------------
+bool resTree_RemovePushHandler
+(
+    hub_HandlerRef_t handlerRef
+)
+//--------------------------------------------------------------------------------------------------
+{
+    bool removedFromResource = false;
+    res_Resource_t* resourcePtr = res_RemovePushHandler(handlerRef);
+
+    if (resourcePtr != NULL)
+    {
+        removedFromResource = true;
+        Entry_t* entryPtr = res_GetResTreeEntry(resourcePtr);
+
+        // If the resource is a placeholder and now has no Admin settings, it should be deleted.
+        if (   (entryPtr->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
+            && !res_HasAdminSettings(resourcePtr) )
+        {
+            DeletePlaceholder(entryPtr);
+        }
+    }
+
+    return removedFromResource;
 }
 
 
@@ -1246,8 +1304,37 @@ le_result_t resTree_SetSource
     LE_ASSERT(destEntry->type != ADMIN_ENTRY_TYPE_NAMESPACE);
     LE_ASSERT(destEntry->type != ADMIN_ENTRY_TYPE_NONE);
 
-    return res_SetSource(destEntry->u.resourcePtr,
-        (srcEntry != NULL ? srcEntry->u.resourcePtr : NULL));
+    // If we are removing the source,
+    if (srcEntry == NULL)
+    {
+        resTree_EntryRef_t oldSrcEntry = res_GetSource(destEntry->u.resourcePtr);
+
+        // Note: removal always succeeds.
+        (void)res_SetSource(destEntry->u.resourcePtr, NULL);
+
+        // If there was a source that is a placeholder that now has no
+        // administrative settings left, delete it.
+        if (   (oldSrcEntry != NULL)
+            && (oldSrcEntry->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
+            && !res_HasAdminSettings(oldSrcEntry->u.resourcePtr)  )
+        {
+            DeletePlaceholder(oldSrcEntry);
+        }
+
+        // If the destination is a placeholder that now has no
+        // administrative settings left, delete it.
+        if (   (destEntry->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
+            && !res_HasAdminSettings(destEntry->u.resourcePtr)  )
+        {
+            DeletePlaceholder(destEntry);
+        }
+
+        return LE_OK;
+    }
+    else
+    {
+        return res_SetSource(destEntry->u.resourcePtr, srcEntry->u.resourcePtr);
+    }
 }
 
 
@@ -1305,18 +1392,17 @@ void resTree_DeleteIO
     }
     else
     {
+        // Delete the IO resource.
+        res_Delete(ioPtr, entryRef->type);
+
         // Detach the IO resource from the resource tree entry (converting it into a namespace).
         entryRef->u.flags = 0;
         entryRef->type = ADMIN_ENTRY_TYPE_NAMESPACE;
 
-        // Release the IO resource.
-        le_mem_Release(ioPtr);
-
         // Record the deletion.
         snapshot_RecordNodeDeletion(entryRef);
 
-        // Release the resource tree entry.
-        le_mem_Release(entryRef);
+        resTree_DeleteNamespace(entryRef);
     }
 }
 
@@ -1335,7 +1421,7 @@ void resTree_DeleteObservation
     CallResourceTreeChangeHandlers(obsEntry, ADMIN_ENTRY_TYPE_OBSERVATION, ADMIN_RESOURCE_REMOVED);
 
     // Delete the Observation resource object.
-    res_DeleteObservation(obsEntry->u.resourcePtr);
+    res_Delete(obsEntry->u.resourcePtr, ADMIN_ENTRY_TYPE_OBSERVATION);
 
     // Convert the resource tree entry into a namespace, detaching the Observation resource from it.
     obsEntry->u.flags = 0;
@@ -1344,8 +1430,26 @@ void resTree_DeleteObservation
     // Record the deletion.
     snapshot_RecordNodeDeletion(obsEntry);
 
+    resTree_DeleteNamespace(obsEntry);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Delete a Namespace resource.
+ */
+//--------------------------------------------------------------------------------------------------
+void resTree_DeleteNamespace
+(
+    resTree_EntryRef_t entryRef
+)
+//--------------------------------------------------------------------------------------------------
+{
     // Release the namespace (resource tree entry).
-    le_mem_Release(obsEntry);
+    // This will cause it to be removed from the resource tree if it doesn't have any
+    // children.  If it does have children, however, then each child holds a reference
+    // count on its parent, so the parent will remain until all the children are deleted.
+    le_mem_Release(entryRef);
 }
 
 
@@ -1728,7 +1832,13 @@ void resTree_RemoveDefault
 )
 //--------------------------------------------------------------------------------------------------
 {
-    return res_RemoveDefault(resEntry->u.resourcePtr);
+    res_RemoveDefault(resEntry->u.resourcePtr);
+
+    if (   (resEntry->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
+        && !res_HasAdminSettings(resEntry->u.resourcePtr) )
+    {
+        DeletePlaceholder(resEntry);
+    }
 }
 
 
@@ -1817,7 +1927,13 @@ void resTree_RemoveOverride
 )
 //--------------------------------------------------------------------------------------------------
 {
-    return res_RemoveOverride(resEntry->u.resourcePtr);
+    res_RemoveOverride(resEntry->u.resourcePtr);
+
+    if (   (resEntry->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
+        && !res_HasAdminSettings(resEntry->u.resourcePtr) )
+    {
+        DeletePlaceholder(resEntry);
+    }
 }
 
 //--------------------------------------------------------------------------------------------------

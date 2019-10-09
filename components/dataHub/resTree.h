@@ -442,6 +442,17 @@ hub_HandlerRef_t resTree_AddPushHandler
 
 //--------------------------------------------------------------------------------------------------
 /**
+ * Remove a Push Handler from a resource.
+ */
+//--------------------------------------------------------------------------------------------------
+bool resTree_RemovePushHandler
+(
+    hub_HandlerRef_t handlerRef
+);
+
+
+//--------------------------------------------------------------------------------------------------
+/**
  * Get the current value of a resource.
  *
  * @return Reference to the Data Sample object or NULL if the resource doesn't have a current value.
@@ -510,6 +521,17 @@ void resTree_DeleteIO
  */
 //--------------------------------------------------------------------------------------------------
 void resTree_DeleteObservation
+(
+    resTree_EntryRef_t entryRef
+);
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Delete a Namespace resource.
+ */
+//--------------------------------------------------------------------------------------------------
+void resTree_DeleteNamespace
 (
     resTree_EntryRef_t entryRef
 );
