@@ -207,6 +207,31 @@ static void BuildResourcePath
 
 //--------------------------------------------------------------------------------------------------
 /**
+ * Create an output resource.
+ */
+//--------------------------------------------------------------------------------------------------
+static void CreateOutput
+(
+    const char* path,   ///< Resource path at which to create the output.
+    dhubIO_DataType_t dataType, ///< Data type of the resource.
+    const char* units   ///< Units string of the resource.
+)
+//--------------------------------------------------------------------------------------------------
+{
+    le_result_t result = dhubIO_CreateOutput(path, dataType, units);
+    if (result == LE_DUPLICATE)
+    {
+        LE_WARN("An output already existed in the Data Hub at path '%s'.", path);
+    }
+    else if (result != LE_OK)
+    {
+        LE_FATAL("Failed to create Data Hub output '%s' (%s).", path, LE_RESULT_TXT(result));
+    }
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
  * Creates a periodic sensor scaffold for a sensor with a given name.
  *
  * This makes the sensor appear in the Data Hub and creates a timer for that sensor.
@@ -249,34 +274,26 @@ psensor_Ref_t psensor_Create
     char path[IO_MAX_RESOURCE_PATH_LEN];
     BuildResourcePath(path, sizeof(path), sensorPtr, "value");
     le_result_t result = dhubIO_CreateInput(path, dataType, units);
-    if (result != LE_OK)
+    if (result == LE_DUPLICATE)
     {
-        LE_FATAL("Failed to create Data Hub Input '%s' (%s).", path, LE_RESULT_TXT(result));
+        LE_WARN("An input already existed in the Data Hub at path '%s'.", path);
+    }
+    else if (result != LE_OK)
+    {
+        LE_FATAL("Failed to create Data Hub input '%s' (%s).", path, LE_RESULT_TXT(result));
     }
 
     BuildResourcePath(path, sizeof(path), sensorPtr, "enable");
-    result = dhubIO_CreateOutput(path, IO_DATA_TYPE_BOOLEAN, "");
-    if (result != LE_OK)
-    {
-        LE_FATAL("Failed to create Data Hub Output '%s' (%s).", path, LE_RESULT_TXT(result));
-    }
+    CreateOutput(path, IO_DATA_TYPE_BOOLEAN, "");
     sensorPtr->enableHandlerRef = dhubIO_AddBooleanPushHandler(path, HandleEnablePush, sensorPtr);
 
 
     BuildResourcePath(path, sizeof(path), sensorPtr, "period");
-    result = dhubIO_CreateOutput(path, IO_DATA_TYPE_NUMERIC, "s");
-    if (result != LE_OK)
-    {
-        LE_FATAL("Failed to create Data Hub Output '%s' (%s).", path, LE_RESULT_TXT(result));
-    }
+    CreateOutput(path, IO_DATA_TYPE_NUMERIC, "s");
     sensorPtr->periodHandlerRef = dhubIO_AddNumericPushHandler(path, HandlePeriodPush, sensorPtr);
 
     BuildResourcePath(path, sizeof(path), sensorPtr, "trigger");
-    result = dhubIO_CreateOutput(path, IO_DATA_TYPE_TRIGGER, "");
-    if (result != LE_OK)
-    {
-        LE_FATAL("Failed to create Data Hub Output '%s' (%s).", path, LE_RESULT_TXT(result));
-    }
+    CreateOutput(path, IO_DATA_TYPE_TRIGGER, "");
     sensorPtr->triggerHandlerRef = dhubIO_AddTriggerPushHandler(path, HandleTriggerPush, sensorPtr);
     dhubIO_MarkOptional(path);
 
