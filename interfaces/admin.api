@@ -118,9 +118,10 @@
  * settings until the actual resource is created.
  *
  * If there are still configuration settings on an Input or Output when the app that created
- * it calls io_DeleteResource() to delete it, that resource will be converted into a Placeholder
- * for the configuration settings.  Only when all of those settings are removed from the
- * Placeholder will the Placeholder disappear from the resource tree.
+ * it calls io_DeleteResource() to delete it (or the client disconnects from the Data Hub),
+ * that resource will be converted into a Placeholder for the configuration settings.
+ * Only when all of those settings are removed from the Placeholder will the Placeholder
+ * disappear from the resource tree.
  *
  *
  * @subsection c_dataHubAdmin_DataSources Data Sources
@@ -451,7 +452,7 @@
  *
  * @section c_dataHubAdmin_ChangeNotifications Receiving Notifications of Resource Tree Changes
  *
- * To be notified when Resources or Observations are created or deleted, clients can register
+ * To be notified when Inputs, Outputs or Observations are created or deleted, clients can register
  * a callback:
  *  - admin_AddResourceTreeChangeHandler()
  *  - admin_RemoveResourceTreeChangeHandler()
