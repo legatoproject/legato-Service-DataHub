@@ -4,6 +4,7 @@
 @subpage c_dataHubAdmin <br>
 @subpage c_dataHubQuery <br>
 @subpage c_dataHubConfig <br>
+@subpage c_periodicSensor <br>
 
 Copyright (C) Sierra Wireless Inc.
 

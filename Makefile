@@ -73,6 +73,7 @@ test: stop all
 
 
 IFGEN_FLAGS = --gen-interface \
+              --gen-common-interface \
               --import-dir interfaces/linux \
               --import-dir $(LEGATO_ROOT)/interfaces \
               --output-dir _build_docs
