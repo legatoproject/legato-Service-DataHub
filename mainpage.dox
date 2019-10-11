@@ -1,10 +1,19 @@
-/** @mainpage Docs
+/** @mainpage Data Hub Documentation
 
-@subpage c_dataHubIo <br>
-@subpage c_dataHubAdmin <br>
-@subpage c_dataHubQuery <br>
-@subpage c_dataHubConfig <br>
-@subpage c_periodicSensor <br>
+The Data Hub is the central clearinghouse in the edge device for
+- sensor data samples,
+- actuator commands, and
+- configuration settings for both sensors and actuators.
+
+To understand how to interact with the Data Hub, read the API documentation:
+
+- @subpage c_dataHubIo <br>
+- @subpage c_dataHubAdmin <br>
+- @subpage c_dataHubQuery <br>
+- @subpage c_dataHubConfig <br>
+- @subpage c_periodicSensor <br>
+
+<hr>
 
 Copyright (C) Sierra Wireless Inc.
 
