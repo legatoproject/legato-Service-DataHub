@@ -840,6 +840,18 @@ void admin_DeleteObs
 )
 //--------------------------------------------------------------------------------------------------
 {
+    // Verify that the path is within the /obs namespace, and if it's an absolute path, convert
+    // it into a relative path.
+    if (strncmp(path, "/obs/", 5) == 0)
+    {
+        path += 5;
+    }
+    else if (path[0] == '/')
+    {
+        LE_ERROR("Path is outside the /obs/ namespace (%s).", path);
+        return;
+    }
+
     resTree_EntryRef_t obsNamespace = resTree_FindEntry(resTree_GetRoot(), "obs");
 
     if (obsNamespace != NULL)
