@@ -818,7 +818,6 @@ static dataSample_Ref_t UpdateSample
     dataSample_Ref_t sample = sampleRef;
     double timestamp = dataSample_GetTimestamp(sampleRef);
 
-
     switch (dataType)
     {
         case IO_DATA_TYPE_BOOLEAN:
@@ -1817,11 +1816,10 @@ dataSample_Ref_t obs_ApplyTransform
     dataSample_Ref_t sample = sampleRef;
     double transformVal;
 
-
     switch (obsPtr->transformType)
     {
         case OBS_TRANSFORM_TYPE_NONE:
-            break;
+            goto done;
 
         case OBS_TRANSFORM_TYPE_MEAN:
             transformVal = obs_QueryMean(resPtr, NAN);
@@ -1844,12 +1842,10 @@ dataSample_Ref_t obs_ApplyTransform
             break;
     }
 
-    // If transformed value differs from the input sample, update the sample
-    if (OBS_TRANSFORM_TYPE_NONE != obsPtr->transformType)
-    {
-        sample = UpdateSample(sampleRef, dataType, (void *)&transformVal);
-    }
+    // Update the sample to have the new, transformed value.
+    sample = UpdateSample(sampleRef, dataType, (void *)&transformVal);
 
+done:
     return sample;
 }
 
