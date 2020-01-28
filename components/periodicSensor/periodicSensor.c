@@ -120,7 +120,7 @@ static void HandlePeriodPush
     {
         // Sanity check the period.
         // If it's invalid, stop the timer and set the period to 0.0.
-        if (period <= 0.0)
+        if ((period <= 0.0) || isnan(period))
         {
             LE_ERROR("Timer period %lf is out of range. Must be > 0.", period);
             le_timer_Stop(sensorPtr->timer);
