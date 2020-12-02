@@ -1073,6 +1073,14 @@ static hub_HandlerRef_t AddPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'query_TriggerPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 query_TriggerPushHandlerRef_t query_AddTriggerPushHandler
@@ -1115,6 +1123,14 @@ void query_RemoveTriggerPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'query_BooleanPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 query_BooleanPushHandlerRef_t query_AddBooleanPushHandler
@@ -1157,6 +1173,14 @@ void query_RemoveBooleanPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'query_NumericPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 query_NumericPushHandlerRef_t query_AddNumericPushHandler
@@ -1199,6 +1223,14 @@ void query_RemoveNumericPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'query_StringPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 query_StringPushHandlerRef_t query_AddStringPushHandler
@@ -1241,6 +1273,14 @@ void query_RemoveStringPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'query_JsonPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 query_JsonPushHandlerRef_t query_AddJsonPushHandler

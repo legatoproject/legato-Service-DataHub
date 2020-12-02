@@ -336,8 +336,8 @@ LE_SHARED le_result_t admin_PushJson
  * anywhere in the resource tree.  If there's no resource at that location yet, a placeholder will
  * be created.
  *
- * @return A reference to the handler, which can be removed using handler_Remove().
- *         If adding the handler fails, NULL is returned.
+ * @return A reference to the handler, which can be removed using handler_Remove(). If adding the
+ *         handler fails due to a malformed path or resource exhaustion, NULL is returned.
  */
 //--------------------------------------------------------------------------------------------------
 static hub_HandlerRef_t AddPushHandler
@@ -386,6 +386,14 @@ static hub_HandlerRef_t AddPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'admin_TriggerPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 admin_TriggerPushHandlerRef_t admin_AddTriggerPushHandler
@@ -428,6 +436,14 @@ void admin_RemoveTriggerPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'admin_BooleanPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 admin_BooleanPushHandlerRef_t admin_AddBooleanPushHandler
@@ -470,6 +486,14 @@ void admin_RemoveBooleanPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'admin_NumericPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 admin_NumericPushHandlerRef_t admin_AddNumericPushHandler
@@ -512,6 +536,14 @@ void admin_RemoveNumericPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'admin_StringPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 admin_StringPushHandlerRef_t admin_AddStringPushHandler
@@ -554,6 +586,14 @@ void admin_RemoveStringPushHandler
 //--------------------------------------------------------------------------------------------------
 /**
  * Add handler function for EVENT 'admin_JsonPush'
+ *
+ * @return reference to the added push handler, or NULL if the path is malformed.
+ *
+ * @note If a NULL reference is returned, the IPC system should just store this and
+ *       use it as the handler reference when removing the handler later. handler_Remove()
+ *       will report an error when this happens, but there will be no other adverse effects.
+ *       On the other side of the IPC link, the client will not see the NULL, as it will
+ *       be replaced by a reference to a local proxy handler object.
  */
 //--------------------------------------------------------------------------------------------------
 admin_JsonPushHandlerRef_t admin_AddJsonPushHandler
