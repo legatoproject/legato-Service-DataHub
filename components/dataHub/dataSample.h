@@ -263,5 +263,73 @@ void dataSample_SetTimestamp
     double timestamp
 );
 
+//--------------------------------------------------------------------------------------------------
+/**
+ * Copies the string in srcStr to the start of destStr and returns the number of bytes copied (not
+ * including the NULL-terminator) in numBytesPtr.  Null can be passed into numBytesPtr if the number
+ * of bytes copied is not needed.  The srcStr must be in UTF-8 format.
+ *
+ * A JSON string begins and ends with quotation marks.  All Unicode characters may be placed within
+ * the quotation marks, except for the characters that must be escaped:
+ * quotation mark, reverse solidus, and the control characters (U+0001 through U+001F).
+ *
+ * If the size of srcStr is less than or equal to the destination buffer size then the entire srcStr
+ * will be copied including the null-character.  The rest of the destination buffer is not modified.
+ *
+ * If the size of srcStr is larger than the destination buffer then the maximum number of characters
+ * (from srcStr) plus a null-character that will fit in the destination buffer is copied.
+ *
+ * UTF-8 characters may be more than one byte long and this function will only copy whole characters
+ * not partial characters. Therefore, even if srcStr is larger than the destination buffer, the
+ * copied characters may not fill the entire destination buffer because the last character copied
+ * may not align exactly with the end of the destination buffer.
+ *
+ * The destination string will always be Null-terminated, unless destSize is zero.
+ *
+ * If destStr and srcStr overlap the behaviour of this function is undefined.
+ *
+ * @return
+ *      - LE_OK if srcStr was completely copied to the destStr.
+ *      - LE_OVERFLOW if srcStr was truncated when it was copied to destStr.
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t dataSample_StringToJson
+(
+    char* destStr,          ///< [IN] Destination (JSON format) where the srcStr is to be copied.
+    const char* srcStr,     ///< [IN] UTF-8 source string.
+    const size_t destSize,  ///< [IN] Size of the destination buffer in bytes.
+    size_t* numBytesPtr     ///< [OUT] Number of bytes copied not including the NULL-terminator.
+                            ///        Parameter can be set to NULL if the number of bytes copied is
+                            ///        not needed.
+);
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * JSON to String conversion
+ *
+ * This function transforms a JSON string into its unescaped version.
+ *
+ * This function copies the string in srcStr to the start of destStr and returns the number of bytes
+ * copied (not including the NULL-terminator) in numBytesPtr.  Null can be passed into numBytesPtr
+ * if the number of bytes copied is not needed.
+ *
+ * Size of the destination buffer must be equal to at least the length of the source string srcStr.
+ *
+ * The destination string will always be Null-terminated, unless destSize is zero.
+ *
+ * If destStr and srcStr overlap the behaviour of this function is undefined.
+ *
+ * @note UTF-8 characters are supported.
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t dataSample_JsonToString
+(
+    char* destStr,          ///< [IN] The destination where the srcStr is to be copied.
+    const char* srcStr,     ///< [IN] The UTF-8 source string.
+    const size_t destSize,  ///< [IN] Size of the destination buffer in bytes.
+    size_t* numBytesPtr     ///< [OUT] The number of bytes copied not including the NULL-terminator.
+                            ///        This parameter can be set to NULL if the number of bytes
+                            ///        copied is not needed.
+);
 
 #endif // DATA_SAMPLE_H_INCLUDE_GUARD
