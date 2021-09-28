@@ -395,10 +395,21 @@ le_result_t ioPoint_DoTypeCoercion
                     break;  // No conversion required.
 
                 case IO_DATA_TYPE_JSON:
-
-                    toSample = dataSample_CreateString(timestamp, dataSample_GetJson(fromSample));
+                {
+                    // We need to unescape the string
+                    const char* oldValue = dataSample_GetJson(fromSample);
+                    char newValue[HUB_MAX_STRING_BYTES];
+                    if (LE_OK == dataSample_JsonToString(newValue, oldValue, sizeof(newValue), NULL))
+                    {
+                        toSample = dataSample_CreateString(timestamp, newValue);
+                    }
+                    else
+                    {
+                        toSample = NULL;
+                    }
+                    le_mem_Release(fromSample);
                     break;
-
+                }
             }
             break;
 
@@ -440,16 +451,24 @@ le_result_t ioPoint_DoTypeCoercion
                 {
                     const char* oldValue = dataSample_GetString(fromSample);
                     char newValue[HUB_MAX_STRING_BYTES];
-                    if (snprintf(newValue, sizeof(newValue), "\"%s\"", oldValue) >=
-                        (int) sizeof(newValue))
+                    size_t len;
+
+                    // Must wrap the string value in quotes.
+                    // We need at least 3 bytes for the two quotes and a null terminator.
+                    newValue[0] = '"';
+                    le_result_t result = dataSample_StringToJson(newValue + 1, oldValue, sizeof(newValue) - 1 , &len);
+                    if ((result != LE_OK) || (len >= (sizeof(newValue) - 1)))  // need 1 more for the last '"'
                     {
-                        // Truncate the string in the JSON value.
-                        LE_DEBUG("String overflow.");
-                        newValue[sizeof(newValue - 2)] = '"';
-                        newValue[sizeof(newValue - 1)] = '\0';
+                        toSample = NULL;
+                    }
+                    else
+                    {
+                        newValue[len] = '"'; // replace null-terminator with '"'
+                        newValue[len + 1] = '\0'; // null-terminate the string.
+
+                        toSample = dataSample_CreateJson(timestamp, newValue);
                     }
                     le_mem_Release(fromSample);
-                    toSample = dataSample_CreateJson(timestamp, newValue);
                     break;
                 }
 
