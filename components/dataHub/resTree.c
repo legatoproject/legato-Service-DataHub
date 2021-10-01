@@ -898,7 +898,6 @@ le_result_t resTree_GetObservation
     if (entryRef->type == ADMIN_ENTRY_TYPE_PLACEHOLDER)
     {
         entryRef->type = ADMIN_ENTRY_TYPE_OBSERVATION;
-        res_ConvertPlaceholderToObs(entryRef->u.resourcePtr);
 
         res_RestoreBackup(entryRef->u.resourcePtr);
 

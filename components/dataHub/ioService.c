@@ -696,10 +696,6 @@ static hub_HandlerRef_t AddPushHandler
     {
         handler_Call(handlerRef, resTree_GetDataType(resRef), sampleRef);
     }
-    else
-    {
-        LE_WARN("failed to get current value");
-    }
 
     if (handlerRef)
     {

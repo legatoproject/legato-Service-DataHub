@@ -198,17 +198,6 @@ void res_ConvertPlaceholderToOutput
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Convert a placeholder resource to an Observation resource.
- */
-//--------------------------------------------------------------------------------------------------
-void res_ConvertPlaceholderToObs
-(
-    res_Resource_t* resPtr     ///< Pointer to resource
-);
-
-
-//--------------------------------------------------------------------------------------------------
-/**
  * Converts an IO resource that is being deleted to a placeholder.
  */
 //--------------------------------------------------------------------------------------------------
