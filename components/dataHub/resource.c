@@ -275,8 +275,6 @@ static void ConvertPlaceholderToIO
     resPtr->currentType = dataType;
 
     SetUnits(resPtr, units);
-
-    LE_ASSERT(resPtr->jsonExample == NULL);
 }
 
 
@@ -314,22 +312,6 @@ void res_ConvertPlaceholderToOutput
     ConvertPlaceholderToIO(resPtr, dataType, units);
     ioPoint_MakeResourceOutput(resPtr, dataType);
 }
-
-
-//--------------------------------------------------------------------------------------------------
-/**
- * Convert a placeholder resource to an Observation resource.
- */
-//--------------------------------------------------------------------------------------------------
-void res_ConvertPlaceholderToObs
-(
-    res_Resource_t* resPtr     ///< Pointer to resource
-)
-//--------------------------------------------------------------------------------------------------
-{
-    LE_ASSERT(resPtr->jsonExample == NULL);
-}
-
 
 //--------------------------------------------------------------------------------------------------
 /**
@@ -662,8 +644,8 @@ static le_result_t UpdateCurrentValue
         le_result_t pushRes = res_Push(destPtr, dataType, resPtr->units, dataSample);
         if (pushRes != LE_OK)
         {
-            LE_ERROR("Failed to update a value for entry %s with error: %d",
-                     resTree_GetEntryName(destPtr->entryRef), res);
+            LE_ERROR("Failed to update a value for entry %s with error: %s",
+                     resTree_GetEntryName(destPtr->entryRef), LE_RESULT_TXT(pushRes));
             if (res == LE_OK || pushRes == LE_NO_MEMORY)
             {
                 // Latch in error result if a push fails in the middle of processing multiple
@@ -738,7 +720,7 @@ le_result_t res_Push
         if (true != obs_ShouldAccept(resPtr, dataType, dataSample))
         {
             le_mem_Release(dataSample);
-            LE_ERROR("Rejecting push because datasample should not be accepted");
+            LE_INFO("Rejecting push because datasample should not be accepted");
             return LE_FAULT;
         }
     }
