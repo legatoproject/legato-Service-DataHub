@@ -324,12 +324,6 @@ void res_ConvertIoToPlaceholder
 )
 //--------------------------------------------------------------------------------------------------
 {
-    if (resPtr->currentValue != NULL)
-    {
-        le_mem_Release(resPtr->currentValue);
-        resPtr->currentValue = NULL;
-    }
-
     if (resPtr->jsonExample != NULL)
     {
         le_mem_Release(resPtr->jsonExample);
