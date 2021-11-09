@@ -72,13 +72,16 @@ test: stop all
 	test/configTest/run_test.sh $(TEST_ARGS)
 
 
-IFGEN_FLAGS = --gen-interface --output-dir _build_docs
+IFGEN_FLAGS = --gen-interface \
+              --import-dir interfaces/linux \
+              --import-dir $(LEGATO_ROOT)/interfaces \
+              --output-dir _build_docs
 
 .PHONY: docs
 docs:
 	mkdir -p _build_docs
-	ifgen $(IFGEN_FLAGS) admin.api
-	ifgen $(IFGEN_FLAGS) io.api
-	ifgen $(IFGEN_FLAGS) query.api
-	ifgen $(IFGEN_FLAGS) config.api
+	ifgen $(IFGEN_FLAGS) interfaces/admin.api
+	ifgen $(IFGEN_FLAGS) interfaces/io.api
+	ifgen $(IFGEN_FLAGS) interfaces/query.api
+	ifgen $(IFGEN_FLAGS) interfaces/config.api
 	doxygen

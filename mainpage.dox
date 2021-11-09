@@ -3,6 +3,7 @@
 @subpage c_dataHubIo <br>
 @subpage c_dataHubAdmin <br>
 @subpage c_dataHubQuery <br>
+@subpage c_dataHubConfig <br>
 
 Copyright (C) Sierra Wireless Inc.
 
