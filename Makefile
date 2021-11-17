@@ -11,26 +11,28 @@ ifeq ($(O),1)
     OCTAVE := -C -DWITH_OCTAVE -C -Icomponents/octaveFormatter
 endif
 
+DATAHUB_INTF_INCLUDES := -i $(CURDIR)/interfaces -i $(CURDIR)/interfaces/linux
+
 .PHONY: all dataHub appInfoStub sensor actuator snapshot
 all: dataHub appInfoStub sensor actuator snapshot configTest
 
 dataHub:
-	mkapp -t $(TARGET) dataHub.adef -i $(LEGATO_ROOT)/interfaces/supervisor $(DBG) ${OCTAVE}
+	mkapp -t $(TARGET) dataHub.adef -i $(LEGATO_ROOT)/interfaces/supervisor $(DATAHUB_INTF_INCLUDES) $(DBG) ${OCTAVE}
 
 appInfoStub:
-	mkapp -t $(TARGET) test/appInfoStub.adef -i $(LEGATO_ROOT)/interfaces/supervisor -i $(CURDIR) $(DBG)
+	mkapp -t $(TARGET) test/appInfoStub.adef -i $(LEGATO_ROOT)/interfaces/supervisor $(DBG)
 
 sensor:
-	mkapp -t $(TARGET) test/sensor.adef -i $(PWD) -s components -i components/periodicSensor $(DBG)
+	mkapp -t $(TARGET) test/sensor.adef -s components $(DATAHUB_INTF_INCLUDES) $(DBG)
 
 actuator:
-	mkapp -t $(TARGET) test/actuator.adef -i $(PWD) $(DBG)
+	mkapp -t $(TARGET) test/actuator.adef $(DATAHUB_INTF_INCLUDES) $(DBG)
 
 snapshot:
-	mkapp -t $(TARGET) test/snapshot.adef -i $(PWD) $(DBG) ${OCTAVE}
+	mkapp -t $(TARGET) test/snapshot.adef $(DATAHUB_INTF_INCLUDES) $(DBG) ${OCTAVE}
 
 configTest:
-	mkapp -t $(TARGET) test/configTest.adef -i $(PWD) $(DBG)
+	mkapp -t $(TARGET) test/configTest.adef $(DATAHUB_INTF_INCLUDES) $(DBG)
 
 .PHONY: clean
 clean:
