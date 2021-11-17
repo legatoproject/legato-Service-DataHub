@@ -24,20 +24,23 @@ COMPONENT_INIT
 
 #if LE_CONFIG_LINUX
    const char *action = le_arg_GetArg(0);
-
-   if (strcmp(action, "parser") == 0)
+   if (action == NULL)
+   {
+       LE_FATAL("No action specified");
+   }
+   else if (strcmp(action, "parser") == 0)
    {
        config_parser_test();
    }
    else if (strcmp(action, "destination") == 0)
    {
-        config_destinationPush_test();
+       config_destinationPush_test();
    }
    else
    {
-       LE_ERROR("unknown action");
+       LE_FATAL("unknown action: \"%s\"", action);
    }
 #else
-    config_destinationPush_test();
+   config_destinationPush_test();
 #endif
 }
