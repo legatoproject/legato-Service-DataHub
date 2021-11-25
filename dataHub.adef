@@ -44,16 +44,8 @@ extern:
 {
     hubd.dataHub.admin
     hubd.dataHub.io
-    hubd.dataHub.le_appInfo
     hubd.dataHub.query
     hubd.dataHub.config
-
-#if ${DHUB_DISABLE_TOOLS} = 1
-#else
-    dhubToolAdmin   = dhub.adminTool.admin
-    dhubToolIo      = dhub.adminTool.io
-    dhubToolQuery   = dhub.adminTool.query
-#endif /* end !DHUB_DISABLE_TOOLS */
 }
 
 #if ${LE_CONFIG_LINUX} = y
