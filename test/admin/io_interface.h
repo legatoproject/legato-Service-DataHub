@@ -589,7 +589,7 @@ le_result_t io_CreateOutput
  * Does nothing if the resource doesn't exist.
  */
 //--------------------------------------------------------------------------------------------------
-void io_DeleteResource
+le_result_t io_DeleteResource
 (
     const char* LE_NONNULL path
         ///< [IN] Resource path within the client app's namespace.
@@ -600,7 +600,7 @@ void io_DeleteResource
  * Push a trigger type data sample.
  */
 //--------------------------------------------------------------------------------------------------
-void io_PushTrigger
+le_result_t io_PushTrigger
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -614,7 +614,7 @@ void io_PushTrigger
  * Push a Boolean type data sample.
  */
 //--------------------------------------------------------------------------------------------------
-void io_PushBoolean
+le_result_t io_PushBoolean
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -630,7 +630,7 @@ void io_PushBoolean
  * Push a numeric type data sample.
  */
 //--------------------------------------------------------------------------------------------------
-void io_PushNumeric
+le_result_t io_PushNumeric
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -646,7 +646,7 @@ void io_PushNumeric
  * Push a string type data sample.
  */
 //--------------------------------------------------------------------------------------------------
-void io_PushString
+le_result_t io_PushString
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -662,7 +662,7 @@ void io_PushString
  * Push a JSON data sample.
  */
 //--------------------------------------------------------------------------------------------------
-void io_PushJson
+le_result_t io_PushJson
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -821,7 +821,7 @@ void io_MarkOptional
  * @note This will be ignored if the resource already has a default value.
  */
 //--------------------------------------------------------------------------------------------------
-void io_SetBooleanDefault
+le_result_t io_SetBooleanDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -836,7 +836,7 @@ void io_SetBooleanDefault
  * @note This will be ignored if the resource already has a default value.
  */
 //--------------------------------------------------------------------------------------------------
-void io_SetNumericDefault
+le_result_t io_SetNumericDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -851,7 +851,7 @@ void io_SetNumericDefault
  * @note This will be ignored if the resource already has a default value.
  */
 //--------------------------------------------------------------------------------------------------
-void io_SetStringDefault
+le_result_t io_SetStringDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.
@@ -866,7 +866,7 @@ void io_SetStringDefault
  * @note This will be ignored if the resource already has a default value.
  */
 //--------------------------------------------------------------------------------------------------
-void io_SetJsonDefault
+le_result_t io_SetJsonDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Resource path within the client app's namespace.

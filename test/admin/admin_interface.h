@@ -789,7 +789,7 @@ void admin_MarkOptional
  *       Placeholder resource to be created.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_PushTrigger
+le_result_t admin_PushTrigger
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute resource tree path.
@@ -806,7 +806,7 @@ void admin_PushTrigger
  *       Placeholder resource to be created.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_PushBoolean
+le_result_t admin_PushBoolean
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute resource tree path.
@@ -825,7 +825,7 @@ void admin_PushBoolean
  *       Placeholder resource to be created.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_PushNumeric
+le_result_t admin_PushNumeric
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute resource tree path.
@@ -844,7 +844,7 @@ void admin_PushNumeric
  *       Placeholder resource to be created.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_PushString
+le_result_t admin_PushString
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute resource tree path.
@@ -863,7 +863,7 @@ void admin_PushString
  *       Placeholder resource to be created.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_PushJson
+le_result_t admin_PushJson
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute resource tree path.
@@ -1103,7 +1103,7 @@ void admin_DeleteObs
  * This is used to throttle the rate of data passing into and through an Observation.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetMinPeriod
+le_result_t admin_SetMinPeriod
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1131,7 +1131,7 @@ double admin_GetMinPeriod
  * Ignored for all non-numeric types except Boolean for which non-zero = true and zero = false.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetHighLimit
+le_result_t admin_SetHighLimit
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1159,7 +1159,7 @@ double admin_GetHighLimit
  * Ignored for all non-numeric types except Boolean for which non-zero = true and zero = false.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetLowLimit
+le_result_t admin_SetLowLimit
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1190,7 +1190,7 @@ double admin_GetLowLimit
  * For all other types, any non-zero value means accept any change, but drop if the same as current.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetChangeBy
+le_result_t admin_SetChangeBy
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1220,7 +1220,7 @@ double admin_GetChangeBy
  * Ignored for all non-numeric types except Boolean for which non-zero = true and zero = false.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetTransform
+le_result_t admin_SetTransform
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1256,7 +1256,7 @@ admin_TransformType_t admin_GetTransform
  * To clear, set to an empty string.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetJsonExtraction
+le_result_t admin_SetJsonExtraction
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1291,7 +1291,7 @@ le_result_t admin_GetJsonExtraction
  * circular buffers. When full, the buffer drops the oldest value to make room for a new addition.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetBufferMaxCount
+le_result_t admin_SetBufferMaxCount
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1320,7 +1320,7 @@ uint32_t admin_GetBufferMaxCount
  * specifies.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetBufferBackupPeriod
+le_result_t admin_SetBufferBackupPeriod
 (
     const char* LE_NONNULL path,
         ///< [IN] Path within the /obs/ namespace.
@@ -1348,7 +1348,7 @@ uint32_t admin_GetBufferBackupPeriod
  * Set the default value of a resource to a Boolean value.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetBooleanDefault
+le_result_t admin_SetBooleanDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1361,7 +1361,7 @@ void admin_SetBooleanDefault
  * Set the default value of a resource to a numeric value.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetNumericDefault
+le_result_t admin_SetNumericDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1374,7 +1374,7 @@ void admin_SetNumericDefault
  * Set the default value of a resource to a string value.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetStringDefault
+le_result_t admin_SetStringDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1387,7 +1387,7 @@ void admin_SetStringDefault
  * Set the default value of a resource to a JSON value.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetJsonDefault
+le_result_t admin_SetJsonDefault
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1508,7 +1508,7 @@ void admin_RemoveDefault
  *       does not match the data type of the Input or Output.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetBooleanOverride
+le_result_t admin_SetBooleanOverride
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1524,7 +1524,7 @@ void admin_SetBooleanOverride
  *       does not match the data type of the Input or Output.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetNumericOverride
+le_result_t admin_SetNumericOverride
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1540,7 +1540,7 @@ void admin_SetNumericOverride
  *       does not match the data type of the Input or Output.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetStringOverride
+le_result_t admin_SetStringOverride
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.
@@ -1556,7 +1556,7 @@ void admin_SetStringOverride
  *       does not match the data type of the Input or Output.
  */
 //--------------------------------------------------------------------------------------------------
-void admin_SetJsonOverride
+le_result_t admin_SetJsonOverride
 (
     const char* LE_NONNULL path,
         ///< [IN] Absolute path of the resource.

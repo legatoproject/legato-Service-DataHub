@@ -4,6 +4,7 @@
 #include "io_interface.h"
 #include "admin_interface.h"
 #include "query_interface.h"
+#include "config_interface.h"
 
 //--------------------------------------------------------------------------------------------------
 /**
@@ -11,6 +12,11 @@
  */
 //--------------------------------------------------------------------------------------------------
 #define LE_LIMIT_APP_NAME_LEN 47
+
+// #define CONFIG_MAX_ERROR_MSG_LEN 255
+// #define CONFIG_MAX_ERROR_MSG_BYTES (CONFIG_MAX_ERROR_MSG_LEN+1)
+// #define CONFIG_MAX_DESTINATION_SRC_BYTES (79+63+1)
+// #define CONFIG_MAX_DESTINATION_NAME_BYTES (15+1)
 
 //--------------------------------------------------------------------------------------------------
 /**

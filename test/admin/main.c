@@ -246,6 +246,42 @@ static void test_admin_set_json_example
     }
 }
 
+static void DummyHandler
+(
+    double timestamp,
+    const char *value,
+    void *context
+)
+{
+    (void)timestamp;
+    (void)value;
+    (void)context;
+}
+
+// LE-16330
+static void test_admin_create_delete_observation
+(
+    void** state
+)
+{
+    (void)state;
+
+    admin_JsonPushHandlerRef_t handlerRef;
+
+    // Create an observation
+    LE_ASSERT(admin_CreateObs("myObs") == LE_OK);
+
+    // Set a handler
+    handlerRef = admin_AddJsonPushHandler("/obs/myObs", DummyHandler, NULL);
+    LE_ASSERT(handlerRef);
+
+    // Delete Observation
+    admin_DeleteObs("myObs");
+
+    // Delete handler, data hub should not crash
+    admin_RemoveJsonPushHandler(handlerRef);
+}
+
 int main(int argc, char **argv)
 {
     (void)argc;
@@ -259,7 +295,8 @@ int main(int argc, char **argv)
         cmocka_unit_test(test_admin_create_output_bad_path),
         cmocka_unit_test(test_admin_create_output_duplicate),
         cmocka_unit_test(test_admin_mark_optional),
-        cmocka_unit_test(test_admin_set_json_example)
+        cmocka_unit_test(test_admin_set_json_example),
+        cmocka_unit_test(test_admin_create_delete_observation)
     };
     return cmocka_run_group_tests(tests, setup, teardown);
 }
